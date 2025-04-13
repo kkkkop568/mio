@@ -1,0 +1,66 @@
+
+loadstring([==[
+-- Whacky Wizards 핵 GUI 허브
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "WhackyHack"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 180, 0, 240)
+frame.Position = UDim2.new(0, 20, 0.5, -120)
+frame.BackgroundTransparency = 0.2
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.Active = true
+frame.Draggable = true
+Instance.new("UICorner", frame)
+
+local layout = Instance.new("UIListLayout", frame)
+layout.Padding = UDim.new(0, 4)
+
+local function createButton(txt, callback)
+    local btn = Instance.new("TextButton", frame)
+    btn.Size = UDim2.new(1, 0, 0, 30)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    btn.Text = txt
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 14
+    Instance.new("UICorner", btn)
+    btn.MouseButton1Click:Connect(callback)
+end
+
+createButton("모든 재료 획득", function()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("TouchTransmitter") and v.Parent:IsA("Part") then
+            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0)
+            wait()
+            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1)
+        end
+    end
+end)
+
+createButton("Fly", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/torosaur/roblox-scripts/main/simplefly.lua"))()
+end)
+
+createButton("Speed x2", function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
+end)
+
+createButton("작아지기", function()
+    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(0,0,0))
+    game.Players.LocalPlayer.Character.HumanoidRootPart.Size = Vector3.new(1,1,1)
+end)
+
+createButton("물약 자동 사용", function()
+    local cauldron = workspace:FindFirstChild("Cauldron", true)
+    if cauldron then
+        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, cauldron, 0)
+        wait(0.5)
+        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, cauldron, 1)
+    end
+end)
+
+createButton("닫기", function()
+    gui:Destroy()
+end)
+]==])()
