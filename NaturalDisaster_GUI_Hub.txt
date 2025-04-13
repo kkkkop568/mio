@@ -1,0 +1,82 @@
+-- 자연재해 서바이벌 핵 GUI 허브 by ChatGPT
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Frame = Instance.new("Frame", ScreenGui)
+local UICorner = Instance.new("UICorner", Frame)
+local UIListLayout = Instance.new("UIListLayout", Frame)
+
+ScreenGui.Name = "DisasterHub"
+Frame.Size = UDim2.new(0, 180, 0, 300)
+Frame.Position = UDim2.new(0, 20, 0.5, -150)
+Frame.BackgroundTransparency = 0.2
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.Active = true
+Frame.Draggable = true
+
+UIListLayout.Padding = UDim.new(0, 4)
+
+local function addButton(text, callback)
+	local btn = Instance.new("TextButton", Frame)
+	btn.Size = UDim2.new(1, 0, 0, 30)
+	btn.Text = text
+	btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.Gotham
+	btn.TextSize = 14
+	Instance.new("UICorner", btn)
+	btn.MouseButton1Click:Connect(callback)
+end
+
+-- 기능 1: Fly
+addButton("Fly", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/torosaur/roblox-scripts/main/simplefly.lua"))()
+end)
+
+-- 기능 2: Godmode
+addButton("Godmode", function()
+	local char = game.Players.LocalPlayer.Character
+	if char and char:FindFirstChild("Humanoid") then
+		char.Humanoid.Name = "1"
+		local newHumanoid = char.Humanoid:Clone()
+		newHumanoid.Name = "Humanoid"
+		newHumanoid.Parent = char
+		char:FindFirstChild("1"):Destroy()
+		game.Workspace.CurrentCamera.CameraSubject = char:FindFirstChild("Humanoid")
+	end
+end)
+
+-- 기능 3: Auto Jump
+addButton("Auto Jump", function()
+	while wait(0.5) do
+		pcall(function()
+			game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Jump = true
+		end)
+	end
+end)
+
+-- 기능 4: Speed Boost
+addButton("Speed Boost", function()
+	game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 50
+end)
+
+-- 기능 5: Disaster Detector
+addButton("Detect Disaster", function()
+	local disaster = workspace:FindFirstChildWhichIsA("Message") or workspace:FindFirstChildWhichIsA("Hint")
+	if disaster then
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "재해 탐지됨!";
+			Text = disaster.Text;
+			Duration = 5
+		})
+	else
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "재해 없음";
+			Text = "현재 재해 메시지를 찾을 수 없습니다.";
+			Duration = 5
+		})
+	end
+end)
+
+-- 닫기 버튼
+addButton("닫기", function()
+	ScreenGui:Destroy()
+end)
